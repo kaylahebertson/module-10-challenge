@@ -58,3 +58,26 @@ function mainPage() {
         });
 }
 
+function listEmployees() {
+    db.query('SELECT * FROM employee')
+        .then(res => {
+            console.table(res.rows);
+            mainPage();
+        });
+}
+
+function listDepartments() {
+    db.query('SELECT * FROM department')
+        .then(res => {
+            console.table(res.rows);
+            mainPage();
+        });
+}
+
+function listRoles() {
+    db.query('SELECT * FROM role')
+        .then(res => {
+            console.table(res.rows);
+            mainPage();
+        });
+}
