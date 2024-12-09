@@ -1,5 +1,5 @@
 import inquirer from 'inquirer';
-import { Db } from './db/index.js';
+import Db from './db/index.js';
 
 const db = new Db();
 
@@ -51,7 +51,7 @@ function mainPage() {
                 case 'Update employee role':
                     updateEmployeeRole();
                     break;
-                case 'Quit':
+                case quit():
                     process.exit();
                     break;
             }
@@ -59,7 +59,7 @@ function mainPage() {
 }
 
 function listEmployees() {
-    db.query('SELECT * FROM employee')
+    db.findAllEmployees()
         .then(res => {
             console.table(res.rows);
             mainPage();
@@ -67,7 +67,7 @@ function listEmployees() {
 }
 
 function listDepartments() {
-    db.query('SELECT * FROM department')
+    db.findAllDepartments()
         .then(res => {
             console.table(res.rows);
             mainPage();
@@ -75,7 +75,7 @@ function listDepartments() {
 }
 
 function listRoles() {
-    db.query('SELECT * FROM role')
+    db.findAllRoles()
         .then(res => {
             console.table(res.rows);
             mainPage();
@@ -159,4 +159,31 @@ function addRole() {
                     mainPage();
                 });
         });
+}
+
+function updateEmployeeRole() {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'employee_id',
+                message: 'Enter employee ID'
+            },
+            {
+                type: 'input',
+                name: 'role_id',
+                message: 'Enter new role ID'
+            }
+        ])
+        .then(answers => {
+            db.query('UPDATE employee SET role_id = $1 WHERE id = $2', [answers.role_id, answers.employee_id])
+                .then(() => {
+                    console.log('Employee role updated');
+                    mainPage();
+                });
+        });
+}
+
+function quit() {
+    process.exit();
 }
